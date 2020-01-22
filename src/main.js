@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import Web3 from 'web3'
 import web3Contract from './web3/web3';
+import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false;
 
@@ -18,5 +19,6 @@ web3Contract.init()
 });
 
 new Vue({
-    render: h => h(App),
+    vuetify,
+    render: h => h(App)
 }).$mount('#app');
