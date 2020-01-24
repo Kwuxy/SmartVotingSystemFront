@@ -26,8 +26,8 @@
       </div>
 
       <v-spacer/>
-      <v-text-field :rules="rules" placeholder="ID ballot"/>
-      <v-btn color="indigo" fab small dark style="margin-left: 10px;">
+      <v-text-field v-model="searchedBallot" placeholder="Ballot name"/>
+      <v-btn v-on:click="getBallot()" color="indigo" fab small dark style="margin-left: 10px;">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <v-spacer/>
@@ -41,7 +41,7 @@
 
 <script>
   import Popup from "./components/Popup";
-  import Web3 from 'web3'
+  import VotingSystem from "./web3/web3";
 
   export default {
     name: 'App',
@@ -52,39 +52,27 @@
 
     data () {
       return {
-        loggedAccount: "",
+        searchedBallot: '',
         dialog: false
       }
     },
 
     created() {
-      this.mount()
+      this.init()
     },
 
     methods: {
-      async mount() {
-        await this.loadWeb3()
-        await this.loadBlockchainData()
-      },
+        async init() {
+          await VotingSystem.init()
+        },
 
-      async loadWeb3() {
-        if (window.ethereum) {
-          window.web3 = new Web3(window.ethereum)
-          await window.ethereum.enable()
-        }
-        else if (window.web3) {
-          window.web3 = new Web3(window.web3.currentProvider)
-        }
-        else {
-          window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
-        }
-      },
+        async createBallot(ballotName) {
+          await VotingSystem.createBallot(ballotName)
+        },
 
-      async loadBlockchainData() {
-        const web3 = window.web3
-        const accounts = await web3.eth.getAccounts()
-        this.$data.loggedAccount = accounts[0]
-      }
+        async getBallot() {
+          return VotingSystem.getBallot(this.searchedBallot)
+        }
     }
   };
 </script>
