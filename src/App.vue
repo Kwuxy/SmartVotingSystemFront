@@ -1,27 +1,27 @@
 <template>
   <v-app>
     <v-app-bar
-      app
-      color="primary"
-      dark
+            app
+            color="primary"
+            dark
     >
       <div class="d-flex align-center">
         <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
+                alt="Vuetify Logo"
+                class="shrink mr-2"
+                contain
+                src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+                transition="scale-transition"
+                width="40"
         />
 
         <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
+                alt="Vuetify Name"
+                class="shrink mt-1 hidden-sm-and-down"
+                contain
+                min-width="100"
+                src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
+                width="100"
         />
       </div>
 
@@ -40,16 +40,51 @@
 </template>
 
 <script>
-import Popup from "./components/Popup";
-export default {
-  name: 'App',
+  import Popup from "./components/Popup";
+  import Web3 from 'web3'
 
-  components: {
-    Popup
-  },
+  export default {
+    name: 'App',
 
-  data: () => ({
-    dialog: false,
-  }),
-};
+    components: {
+      Popup
+    },
+
+    data () {
+      return {
+        loggedAccount: "",
+        dialog: false
+      }
+    },
+
+    created() {
+      this.mount()
+    },
+
+    methods: {
+      async mount() {
+        await this.loadWeb3()
+        await this.loadBlockchainData()
+      },
+
+      async loadWeb3() {
+        if (window.ethereum) {
+          window.web3 = new Web3(window.ethereum)
+          await window.ethereum.enable()
+        }
+        else if (window.web3) {
+          window.web3 = new Web3(window.web3.currentProvider)
+        }
+        else {
+          window.alert('Non-Ethereum browser detected. You should consider trying MetaMask!')
+        }
+      },
+
+      async loadBlockchainData() {
+        const web3 = window.web3
+        const accounts = await web3.eth.getAccounts()
+        this.$data.loggedAccount = accounts[0]
+      }
+    }
+  };
 </script>
