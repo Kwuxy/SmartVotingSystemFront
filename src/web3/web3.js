@@ -61,6 +61,10 @@ const VotingSystem = {
         console.log(result.name)
         // eslint-disable-next-line no-console
         console.log(result.candidatesName)
+        // eslint-disable-next-line no-console
+        console.log(result.owner)
+        // eslint-disable-next-line no-console
+        console.log(result.state)
 
         return result
     },
@@ -75,6 +79,10 @@ const VotingSystem = {
             })
             // eslint-disable-next-line no-console
             .on('error', console.error);
+    },
+
+    getConnectedAccount() {
+        return this.accounts[0]
     }
 };
 

@@ -34,10 +34,46 @@
     </v-app-bar>
 
     <v-content>
-      <div v-if="ballot != null" id="ballotDetail">
-        {{this.ballot.name}}
-
-      </div>
+      <template v-if="ballot != null">
+        <v-card>
+          <v-toolbar flat>
+            <v-spacer></v-spacer>
+            <v-toolbar-title>{{this.ballot.name}}</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <div>
+            </div>
+          </v-toolbar>
+          <v-banner
+                  single-line
+          >
+            <template v-slot:actions>
+              <v-btn v-if="ballot.state == 1 && isOwner"
+                      text
+                      color="deep-purple accent-4">OPEN</v-btn>
+              <v-btn v-if="ballot.state == 2 && isOwner"
+                     text
+                     color="deep-purple accent-4">CLOSE</v-btn>
+            </template>
+          </v-banner>
+          <v-card-text class="grey lighten-5">
+            <template class="mx-auto">
+                        <v-row justify="space-around">
+                          <v-col cols="12" sm="6" md="4" lg="3">
+                            <v-sheet class="pa-4 grey lighten-5">
+                              <v-chip-group
+                                      column
+                                      active-class="primary--text" >
+                                <v-chip v-for="candidate in ballot.candidatesName" :key="candidate">
+                                  {{ candidate }}
+                                </v-chip>
+                              </v-chip-group>
+                            </v-sheet>
+                          </v-col>
+                        </v-row>
+            </template>
+          </v-card-text>
+        </v-card>
+      </template>
       <Popup/>
     </v-content>
   </v-app>
@@ -58,7 +94,7 @@
       return {
         searchedBallot: '',
         dialog: false,
-        ballot: null
+        ballot: null,
       }
     },
 
@@ -67,14 +103,17 @@
     },
 
     methods: {
-        async init() {
-          await VotingSystem.init()
-        },
+      async init() {
+        await VotingSystem.init()
+      },
 
-        async getBallot() {
-          this.ballot = await VotingSystem.getBallot(this.searchedBallot)
+      async getBallot() {
+        this.ballot = await VotingSystem.getBallot(this.searchedBallot)
+      },
 
-        }
+      isOwner() {
+        return this.owner == VotingSystem.getConnectedAccount
+      }
     }
   };
 </script>
