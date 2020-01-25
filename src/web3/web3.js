@@ -107,16 +107,35 @@ const VotingSystem = {
             .on('error', console.error);
     },
 
-    vote(ballotName, candidateName) {
+    async vote(ballotName, candidateName) {
         let bytes32Name = window.web3.utils.fromAscii(ballotName);
         let bytes32Candidate = window.web3.utils.fromAscii(candidateName);
-        this.contract.methods.vote(bytes32Name, bytes32Candidate).send({ from: this.getConnectedAccount() })
+        await this.contract.methods.vote(bytes32Name, bytes32Candidate).send({ from: this.getConnectedAccount() })
             .on('receipt', function(receipt){
                 // eslint-disable-next-line no-console
                 console.log(receipt)
             })
             // eslint-disable-next-line no-console
             .on('error', console.error);
+    },
+
+    async getCandidatesResult(ballotName) {
+        let bytes32Name = window.web3.utils.fromAscii(ballotName);
+        let result = await this.contract.methods.getCandidatesResult(bytes32Name).call({from: this.getConnectedAccount()})
+
+        for (let i = 0; i < result.length; i++) {
+            result[i].name = window.web3.utils.hexToString(result[i].name)
+        }
+        // eslint-disable-next-line no-console
+        console.log("candidatesResult:")
+        // eslint-disable-next-line no-console
+        console.log(result)
+        // result.name = window.web3.utils.hexToString(result.name)
+        // for (let i = 0; i < result.candidatesName.length; i++) {
+        //     result.candidatesName[i] = window.web3.utils.hexToString(result.candidatesName[i])
+        // }
+
+        return result
     },
 
 
