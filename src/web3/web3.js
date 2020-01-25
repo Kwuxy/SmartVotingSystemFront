@@ -31,6 +31,10 @@ const VotingSystem = {
         }
     },
 
+    getConnectedAccount() {
+        return this.accounts[0]
+    },
+
     createBallot(ballotName) {
         // eslint-disable-next-line no-console
         console.log("ballotName from web3: " + ballotName)
@@ -39,7 +43,18 @@ const VotingSystem = {
         console.log("ballotName from web3 after conversion: " + bytes32Name)
         // eslint-disable-next-line no-console
         console.log(this.accounts[0])
-        this.contract.methods.createBallot(bytes32Name).send({ from: this.accounts[0] })
+        this.contract.methods.createBallot(bytes32Name).send({ from: this.getConnectedAccount() })
+            .on('receipt', function(receipt){
+                // eslint-disable-next-line no-console
+                console.log(receipt)
+            })
+            // eslint-disable-next-line no-console
+            .on('error', console.error);
+    },
+
+    async openBallotVotes(ballotName) {
+        let bytes32Name = window.web3.utils.fromAscii(ballotName);
+        await this.contract.methods.openBallotVotes(bytes32Name).send({ from: this.getConnectedAccount() })
             .on('receipt', function(receipt){
                 // eslint-disable-next-line no-console
                 console.log(receipt)
@@ -50,7 +65,7 @@ const VotingSystem = {
 
     async getBallot(ballotName) {
         let bytes32Name = window.web3.utils.fromAscii(ballotName);
-        let result = await this.contract.methods.getBallot(bytes32Name).call({from: this.accounts[0]})
+        let result = await this.contract.methods.getBallot(bytes32Name).call({from: this.getConnectedAccount()})
 
         result.name = window.web3.utils.hexToString(result.name)
         for (let i = 0; i < result.candidatesName.length; i++) {
@@ -72,7 +87,7 @@ const VotingSystem = {
     addCandidate(ballotName, candidateName) {
         let bytes32Name = window.web3.utils.fromAscii(ballotName);
         let bytes32Candidate = window.web3.utils.fromAscii(candidateName);
-        this.contract.methods.addCandidate(bytes32Name, bytes32Candidate).send({ from: this.accounts[0] })
+        this.contract.methods.addCandidate(bytes32Name, bytes32Candidate).send({ from: this.getConnectedAccount() })
             .on('receipt', function(receipt){
                 // eslint-disable-next-line no-console
                 console.log(receipt)
@@ -81,9 +96,8 @@ const VotingSystem = {
             .on('error', console.error);
     },
 
-    getConnectedAccount() {
-        return this.accounts[0]
-    }
+
+
 };
 
 export default VotingSystem
