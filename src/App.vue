@@ -43,6 +43,7 @@
             <div>
             </div>
           </v-toolbar>
+
           <v-banner
                   single-line
           >
@@ -56,6 +57,7 @@
                      color="deep-purple accent-4" @click="closeBallot">CLOSE</v-btn>
             </template>
           </v-banner>
+
           <v-card-text class="grey lighten-5">
             <template class="mx-auto">
               <v-row justify="space-around">
@@ -64,15 +66,19 @@
                     <v-chip-group
                             column
                             active-class="primary--text" >
-                      <v-chip v-for="candidate in ballot.candidatesName" :key="candidate">
+                      <v-chip v-on:click="setSelectedCandidate(candidate)" large v-for="candidate in ballot.candidatesName" :key="candidate">
                         {{ candidate }}
                       </v-chip>
                     </v-chip-group>
+                    <v-btn v-if="ballot.state == 2"
+                           text
+                           color="deep-purple accent-4" @click="vote">VOTE</v-btn>
                   </v-sheet>
                 </v-col>
               </v-row>
             </template>
           </v-card-text>
+
         </v-card>
       </template>
       <Popup/>
@@ -96,6 +102,7 @@
         searchedBallot: '',
         dialog: false,
         ballot: null,
+        selectedCandidate: ''
       }
     },
 
@@ -109,7 +116,8 @@
       },
 
       async getBallot() {
-        this.ballot = await VotingSystem.getBallot(this.searchedBallot)
+        if (this.searchedBallot != '')
+          this.ballot = await VotingSystem.getBallot(this.searchedBallot)
       },
 
       async openBallot() {
@@ -120,6 +128,20 @@
       async closeBallot() {
         await VotingSystem.closeBallotVotes(this.ballot.name)
         this.getBallot()
+      },
+
+      async vote() {
+        if(this.selectedCandidate != '')
+          VotingSystem.vote(this.ballot.name, this.selectedCandidate)
+        else
+          alert("You must select one candidate")
+      },
+
+      setSelectedCandidate(candidateName) {
+        if(this.selectedCandidate == candidateName)
+          this.selectedCandidate = ''
+        else
+          this.selectedCandidate = candidateName
       },
 
       isOwner() {

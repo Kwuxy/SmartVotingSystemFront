@@ -107,6 +107,17 @@ const VotingSystem = {
             .on('error', console.error);
     },
 
+    vote(ballotName, candidateName) {
+        let bytes32Name = window.web3.utils.fromAscii(ballotName);
+        let bytes32Candidate = window.web3.utils.fromAscii(candidateName);
+        this.contract.methods.vote(bytes32Name, bytes32Candidate).send({ from: this.getConnectedAccount() })
+            .on('receipt', function(receipt){
+                // eslint-disable-next-line no-console
+                console.log(receipt)
+            })
+            // eslint-disable-next-line no-console
+            .on('error', console.error);
+    },
 
 
 };

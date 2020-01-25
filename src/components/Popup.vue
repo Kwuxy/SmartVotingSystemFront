@@ -48,6 +48,7 @@
             async createBallot() {
                 await VotingSystem.createBallot(this.ballotName)
                 this.candidatesNames.forEach(candidate => VotingSystem.addCandidate(this.ballotName, candidate))
+                this.dialog = false
             }
         }
     }
