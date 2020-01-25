@@ -33,17 +33,34 @@ const VotingSystem = {
 
     createBallot(ballotName) {
         let bytes32Name = window.web3.utils.fromAscii(ballotName);
-        return this.contract.methods.createBallot(bytes32Name).send({ from: this.accounts[0] })
+        this.contract.methods.createBallot(bytes32Name).send({ from: this.accounts[0] })
+            .on('receipt', function(receipt){
+                // eslint-disable-next-line no-console
+                console.log(receipt)
+            })
+            // eslint-disable-next-line no-console
+            .on('error', console.error);
     },
 
     getBallot(ballotName) {
         let bytes32Name = window.web3.utils.fromAscii(ballotName);
+        // eslint-disable-next-line no-console
+        console.log("ballot name : " + ballotName)
         this.contract.methods.getBallot(bytes32Name).call({from: this.accounts[0]})
             .then(function(result){
+                // eslint-disable-next-line no-console
+                console.log(result)
                 result.name = window.web3.utils.hexToString(result.name)
                 // eslint-disable-next-line no-console
                 console.log("nom du ballot récupéré : " + result.name)
-            });
+
+            })
+    },
+
+    addCandidate(ballotName, candidateName) {
+        let bytes32Name = window.web3.utils.fromAscii(ballotName);
+        let bytes32Candidate = window.web3.utils.fromAscii(candidateName);
+        return this.contract.methods.addCandidate(bytes32Name, bytes32Candidate).send({ from: this.accounts[0] })
     }
 };
 

@@ -14,9 +14,9 @@
                     <v-container>
                         <v-row>
                             <v-col cols="12">
-                                <v-text-field label="Ballot name*" outlined shaped required></v-text-field>
+                                <v-text-field label="Ballot name *" required></v-text-field>
                             </v-col>
-                            <Chip/>
+                            <Chip @candidatesChanged="candidates => { this.candidatesNames = candidates }"></Chip>
                         </v-row>
                     </v-container>
                     <small>*indicates required field</small>
@@ -24,7 +24,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="blue darken-1" text @click="dialog = false">Close</v-btn>
-                    <v-btn color="blue darken-1" text @click="dialog = false">Save</v-btn>
+                    <v-btn color="blue darken-1" text @click="createBallot">Save</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -33,13 +33,26 @@
 
 <script>
     import Chip from "./Chip";
+    import VotingSystem from "../web3/web3";
     export default {
         name: "popup",
         components: {Chip},
 
         data: () => ({
             dialog: false,
+            ballotName: '',
+            candidatesNames: []
         }),
+
+        methods: {
+            async createBallot() {
+                await VotingSystem.createBallot(this.ballotName)
+                //this.candidatesNames.forEach(candidate => VotingSystem.addCandidate(this.ballotName, candidate))
+                this.ballotName = []
+                this.candidatesNames = []
+                this.dialog = false
+            }
+        }
     }
 </script>
 

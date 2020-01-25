@@ -71,7 +71,10 @@
         },
 
         async getBallot() {
-          return VotingSystem.getBallot(this.searchedBallot)
+          // eslint-disable-next-line no-console
+          console.log("ballot trouvé :")
+          // eslint-disable-next-line no-console
+          await VotingSystem.getBallot(this.searchedBallot)
         }
     }
   };
