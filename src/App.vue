@@ -34,6 +34,10 @@
     </v-app-bar>
 
     <v-content>
+      <div v-if="ballot != null" id="ballotDetail">
+        {{this.ballot.name}}
+
+      </div>
       <Popup/>
     </v-content>
   </v-app>
@@ -53,7 +57,8 @@
     data () {
       return {
         searchedBallot: '',
-        dialog: false
+        dialog: false,
+        ballot: null
       }
     },
 
@@ -66,15 +71,9 @@
           await VotingSystem.init()
         },
 
-        async createBallot(ballotName) {
-          await VotingSystem.createBallot(ballotName)
-        },
-
         async getBallot() {
-          // eslint-disable-next-line no-console
-          console.log("ballot trouvé :")
-          // eslint-disable-next-line no-console
-          await VotingSystem.getBallot(this.searchedBallot)
+          this.ballot = await VotingSystem.getBallot(this.searchedBallot)
+
         }
     }
   };

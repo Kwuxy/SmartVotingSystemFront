@@ -14,7 +14,7 @@
                     <v-container>
                         <v-row>
                             <v-col cols="12">
-                                <v-text-field label="Ballot name *" required></v-text-field>
+                                <v-text-field v-model="ballotName" label="Ballot name *" required></v-text-field>
                             </v-col>
                             <Chip @candidatesChanged="candidates => { this.candidatesNames = candidates }"></Chip>
                         </v-row>
@@ -47,10 +47,7 @@
         methods: {
             async createBallot() {
                 await VotingSystem.createBallot(this.ballotName)
-                //this.candidatesNames.forEach(candidate => VotingSystem.addCandidate(this.ballotName, candidate))
-                this.ballotName = []
-                this.candidatesNames = []
-                this.dialog = false
+                this.candidatesNames.forEach(candidate => VotingSystem.addCandidate(this.ballotName, candidate))
             }
         }
     }
