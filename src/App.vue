@@ -53,7 +53,7 @@
                      @click="openBallot">OPEN</v-btn>
               <v-btn v-if="ballot.state == 2 && isOwner"
                      text
-                     color="deep-purple accent-4">CLOSE</v-btn>
+                     color="deep-purple accent-4" @click="closeBallot">CLOSE</v-btn>
             </template>
           </v-banner>
           <v-card-text class="grey lighten-5">
@@ -114,7 +114,12 @@
 
       async openBallot() {
         await VotingSystem.openBallotVotes(this.ballot.name)
-        this.ballot = this.getBallot()
+        this.getBallot()
+      },
+
+      async closeBallot() {
+        await VotingSystem.closeBallotVotes(this.ballot.name)
+        this.getBallot()
       },
 
       isOwner() {

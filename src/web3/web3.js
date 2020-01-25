@@ -63,6 +63,17 @@ const VotingSystem = {
             .on('error', console.error);
     },
 
+    async closeBallotVotes(ballotName) {
+        let bytes32Name = window.web3.utils.fromAscii(ballotName);
+        await this.contract.methods.closeBallotVotes(bytes32Name).send({ from: this.getConnectedAccount() })
+            .on('receipt', function(receipt){
+                // eslint-disable-next-line no-console
+                console.log(receipt)
+            })
+            // eslint-disable-next-line no-console
+            .on('error', console.error);
+    },
+
     async getBallot(ballotName) {
         let bytes32Name = window.web3.utils.fromAscii(ballotName);
         let result = await this.contract.methods.getBallot(bytes32Name).call({from: this.getConnectedAccount()})
