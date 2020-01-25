@@ -39,6 +39,7 @@
           <v-toolbar flat>
             <v-spacer></v-spacer>
             <v-toolbar-title>{{this.ballot.name}}</v-toolbar-title>
+
             <v-spacer></v-spacer>
             <div>
             </div>
@@ -47,33 +48,43 @@
           <v-banner
                   single-line
           >
+            <span class="grey--text">
+            The ballot is {{stateDict[this.ballot.state]}}.
+              </span>
             <template v-slot:actions>
               <v-btn v-if="ballot.state == 1 && isOwner"
                      text
                      color="deep-purple accent-4"
-                     @click="openBallot">OPEN</v-btn>
+                     @click="openBallot">OPEN BALLOT</v-btn>
               <v-btn v-if="ballot.state == 2 && isOwner"
                      text
-                     color="deep-purple accent-4" @click="closeBallot">CLOSE</v-btn>
+                     color="deep-purple accent-4" @click="closeBallot">CLOSE BALLOT</v-btn>
             </template>
           </v-banner>
 
           <v-card-text class="grey lighten-5">
             <template class="mx-auto">
               <v-row justify="space-around">
-                <v-col cols="12" sm="6" md="4" lg="3">
-                  <v-sheet class="pa-4 grey lighten-5">
-                    <v-chip-group
-                            column
-                            active-class="primary--text" >
-                      <v-chip v-on:click="setSelectedCandidate(candidateResult.name)" large v-for="candidateResult in candidatesResult" :key="candidateResult.name">
-                        <strong>{{ candidateResult.name }} </strong>
-                        <span>({{ candidateResult.vote }})</span>
-                      </v-chip>
-                    </v-chip-group>
-                    <v-btn v-if="ballot.state == 2 && selectedCandidate != ''"
-                           text
-                           color="deep-purple accent-4" @click="vote">VOTE</v-btn>
+                <v-col cols="12" lg="12">
+                  <v-sheet width="100%" class="pa-4 grey lighten-5">
+                    <v-row justify="center" class="pa-5">
+                      <v-chip-group
+                              column
+                              active-class="primary--text" >
+                        <v-chip v-on:click="setSelectedCandidate(candidateResult.name)" large v-for="candidateResult in candidatesResult" :key="candidateResult.name">
+                          <div>
+                            <strong>{{ candidateResult.name }} </strong> &nbsp;
+                            <span>({{ candidateResult.vote }})</span>
+                          </div>
+
+                        </v-chip>
+                      </v-chip-group>
+                    </v-row>
+                    <v-row justify="center">
+                      <v-btn v-if="ballot.state == 2"
+                             text
+                             color="deep-purple accent-4" @click="vote">VOTE</v-btn>
+                    </v-row>
                   </v-sheet>
                 </v-col>
               </v-row>
@@ -104,7 +115,12 @@
         dialog: false,
         ballot: null,
         candidatesResult: [],
-        selectedCandidate: ''
+        selectedCandidate: '',
+        stateDict: {
+          1: "waiting to be opened",
+          2: "open",
+          3: "closed"
+        }
       }
     },
 
