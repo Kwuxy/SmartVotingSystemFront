@@ -128,6 +128,12 @@
       this.init()
     },
 
+    computed: {
+      isOwner() {
+        return this.ballot.owner == (VotingSystem.getConnectedAccount())
+      }
+    },
+
     methods: {
       async init() {
         await VotingSystem.init()
@@ -166,10 +172,6 @@
         else
           this.selectedCandidate = candidateName
       },
-
-      isOwner() {
-        return this.owner == VotingSystem.getConnectedAccount
-      }
     }
   };
 </script>
